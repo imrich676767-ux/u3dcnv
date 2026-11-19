@@ -1,0 +1,20 @@
+name: u3dconv
+options:
+  bundleIdPrefix: com.imrich676767
+  deploymentTarget:
+    iOS: "16.0"
+targets:
+  u3dconv:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.imrich676767.u3dconv
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "5.9"
+        CODE_SIGN_IDENTITY: ""
+        CODE_SIGNING_REQUIRED: NO
+        CODE_SIGNING_ALLOWED: NO
