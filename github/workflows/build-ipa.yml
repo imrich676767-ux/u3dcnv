@@ -1,0 +1,43 @@
+name: Build IPA (u3dconv iOS)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-ipa:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen generate
+
+      - name: Build unsigned iOS App
+        run: |
+          xcodebuild archive \
+            -project u3dconv.xcodeproj \
+            -scheme u3dconv \
+            -sdk iphoneos \
+            -configuration Release \
+            -archivePath build/u3dconv.xcarchive \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package IPA
+        run: |
+          mkdir -p build/ipa/Payload
+          cp -R build/u3dconv.xcarchive/Products/Applications/u3dconv.app build/ipa/Payload/
+          cd build/ipa && zip -r ../../u3dconv.ipa Payload
+
+      - name: Upload IPA Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: u3dconv-ipa
+          path: u3dconv.ipa
